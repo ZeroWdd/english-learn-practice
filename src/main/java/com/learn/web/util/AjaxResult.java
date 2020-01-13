@@ -32,4 +32,14 @@ public class AjaxResult {
         this.message = message;
         this.success = true;
     }
+
+    public AjaxResult ajaxFalse(){
+        this.success = false;
+        return this;
+    }
+
+    public AjaxResult ajaxSuccess(){
+        this.success = true;
+        return this;
+    }
 }

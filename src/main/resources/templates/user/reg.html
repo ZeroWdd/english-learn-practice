@@ -12,49 +12,13 @@
 </head>
 <body>
 
-<div class="fly-header layui-bg-black">
-  <div class="layui-container">
-    <a class="fly-logo" href="/">
-      <img src="../../res/images/logo.png" alt="layui">
-    </a>
-    <ul class="layui-nav fly-nav layui-hide-xs">
-      <li class="layui-nav-item layui-this">
-        <a href="/"><i class="iconfont icon-jiaoliu"></i>交流</a>
-      </li>
-      <li class="layui-nav-item">
-        <a href="../case/case.html"><i class="iconfont icon-iconmingxinganli"></i>案例</a>
-      </li>
-      <li class="layui-nav-item">
-        <a href="http://www.layui.com/" target="_blank"><i class="iconfont icon-ui"></i>框架</a>
-      </li>
-    </ul>
-    
-    <ul class="layui-nav fly-nav-user">
-      <!-- 未登入的状态 -->
-      <li class="layui-nav-item">
-        <a class="iconfont icon-touxiang layui-hide-xs" href="user/login.html"></a>
-      </li>
-      <li class="layui-nav-item">
-        <a href="user/login.html">登入</a>
-      </li>
-      <li class="layui-nav-item">
-        <a href="user/reg.html">注册</a>
-      </li>
-      <li class="layui-nav-item layui-hide-xs">
-        <a href="/app/qq/" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" title="QQ登入" class="iconfont icon-qq"></a>
-      </li>
-      <li class="layui-nav-item layui-hide-xs">
-        <a href="/app/weibo/" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})" title="微博登入" class="iconfont icon-weibo"></a>
-      </li>
-    </ul>
-  </div>
-</div>
+<div th:replace="/common/header::header-div"></div>
 
 <div class="layui-container fly-marginTop">
   <div class="fly-panel fly-panel-user" pad20>
     <div class="layui-tab layui-tab-brief" lay-filter="user">
       <ul class="layui-tab-title">
-        <li><a href="user/login">登入</a></li>
+        <li><a href="/user/login">登入</a></li>
         <li class="layui-this">注册</li>
       </ul>
       <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
@@ -78,6 +42,12 @@
                 <label for="L_username" class="layui-form-label">昵称</label>
                 <div class="layui-input-inline">
                   <input type="text" id="L_username" name="username" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="username_r" style="color: green;font-weight: bolder;" hidden></i>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="username_l" style="color: red; font-weight: bolder;" hidden>ဆ</i>
                 </div>
               </div>
               <div class="layui-form-item">
@@ -176,6 +146,27 @@
         $('#email_r').removeAttr('hidden');
         $('#email_l').attr('hidden','hidden');
       }
+    });
+
+    $("#L_username").blur(function () {
+      if($('#L_username').val() == "") return;
+      $.ajax({
+        url: '/user/username/',
+        data: JSON.stringify({"username" : $('#L_username').val()}),
+        contentType: "application/json",
+        dataType: 'json',
+        type: 'post',
+        success:function(data){
+          if (data.success) {
+            $('#username_r').removeAttr('hidden');
+            $('#username_l').attr('hidden','hidden');
+          }else {
+            $('#username_l').removeAttr('hidden');
+            $('#username_r').attr('hidden','hidden');
+            layer.msg('昵称已存在');
+          }
+        }
+      });
     });
 
     $("#L_pass").blur(function () {

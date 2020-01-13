@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiKeyAuthDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
 
 import javax.servlet.http.HttpSession;
 import java.util.HashMap;
@@ -38,6 +39,11 @@ public class UserController {
 
     static final String KEY_PREFIX = "user:code:phone:";
 
+    /**
+     * 发送验证码给手机
+     * @param phone
+     * @return
+     */
     @PostMapping("/code")
     public AjaxResult code(@RequestParam("phone") String phone){
         String code = NumberUtils.generateCode(4);
@@ -48,30 +54,47 @@ public class UserController {
             smsUtil.sendSms(phone, JSON.toJSONString(msg));
             // 将code存入redis
             redisTemplate.opsForValue().set(KEY_PREFIX + phone, code, 5, TimeUnit.MINUTES);
-            ajaxResult.ajaxSuccess("发送成功,有效时间5分钟");
+            ajaxResult.ajaxSuccess(null);
         }catch (Exception e){
-            ajaxResult.ajaxFalse("发送失败,请重试");
+            ajaxResult.ajaxFalse(null);
         }
         return ajaxResult;
     }
 
+    /**
+     * 校验验证码
+     * @param map
+     * @return
+     */
     @PostMapping("/check/code")
     public AjaxResult checkCode(@RequestBody Map<String, String> map){
         String code = redisTemplate.opsForValue().get(KEY_PREFIX + map.get("phone"));
-        if(code != null && code.equals(map.get("code")))
-            ajaxResult.ajaxSuccess(null);
-        else
-            ajaxResult.ajaxFalse(null);
-        return ajaxResult;
+        return code != null && code.equals(map.get("code")) ? ajaxResult.ajaxSuccess() : ajaxResult.ajaxFalse();
     }
 
+    /**
+     * 注册
+     * @param user
+     * @return
+     */
     @PostMapping("/reg")
     public AjaxResult reg(@RequestBody User user){
-        if (userService.insertUser(user) == 1) {
-            ajaxResult.ajaxSuccess(null);
-        } else {
-            ajaxResult.ajaxFalse(null);
-        }
-        return ajaxResult;
+        return userService.register(user) == 1 ? ajaxResult.ajaxSuccess() : ajaxResult.ajaxFalse();
     }
+
+    /**
+     * 判断昵称是否已存在
+     * @param user
+     * @return
+     */
+    @PostMapping("/username")
+    public AjaxResult username(@RequestBody User user){
+        return userService.hasUsername(user) ? ajaxResult.ajaxFalse() : ajaxResult.ajaxSuccess();
+    }
+
+    @PostMapping("/login")
+    public AjaxResult login(@RequestBody User user){
+        return userService.login(user) == 1 ? ajaxResult.ajaxSuccess() : ajaxResult.ajaxFalse();
+    }
+
 }
