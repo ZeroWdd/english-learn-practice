@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <title>注册</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="keywords" content="fly,layui,前端社区">
+  <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+  <link rel="stylesheet" th:href="@{/res/layui/css/layui.css}">
+  <link rel="stylesheet" th:href="@{/res/css/global.css}">
+</head>
+<body>
+
+<div class="fly-header layui-bg-black">
+  <div class="layui-container">
+    <a class="fly-logo" href="/">
+      <img src="../../res/images/logo.png" alt="layui">
+    </a>
+    <ul class="layui-nav fly-nav layui-hide-xs">
+      <li class="layui-nav-item layui-this">
+        <a href="/"><i class="iconfont icon-jiaoliu"></i>交流</a>
+      </li>
+      <li class="layui-nav-item">
+        <a href="../case/case.html"><i class="iconfont icon-iconmingxinganli"></i>案例</a>
+      </li>
+      <li class="layui-nav-item">
+        <a href="http://www.layui.com/" target="_blank"><i class="iconfont icon-ui"></i>框架</a>
+      </li>
+    </ul>
+    
+    <ul class="layui-nav fly-nav-user">
+      <!-- 未登入的状态 -->
+      <li class="layui-nav-item">
+        <a class="iconfont icon-touxiang layui-hide-xs" href="user/login.html"></a>
+      </li>
+      <li class="layui-nav-item">
+        <a href="user/login.html">登入</a>
+      </li>
+      <li class="layui-nav-item">
+        <a href="user/reg.html">注册</a>
+      </li>
+      <li class="layui-nav-item layui-hide-xs">
+        <a href="/app/qq/" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" title="QQ登入" class="iconfont icon-qq"></a>
+      </li>
+      <li class="layui-nav-item layui-hide-xs">
+        <a href="/app/weibo/" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})" title="微博登入" class="iconfont icon-weibo"></a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="layui-container fly-marginTop">
+  <div class="fly-panel fly-panel-user" pad20>
+    <div class="layui-tab layui-tab-brief" lay-filter="user">
+      <ul class="layui-tab-title">
+        <li><a href="user/login">登入</a></li>
+        <li class="layui-this">注册</li>
+      </ul>
+      <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+        <div class="layui-tab-item layui-show">
+          <div class="layui-form layui-form-pane">
+            <form method="post">
+              <div class="layui-form-item">
+                <label for="L_email" class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="L_email" name="email" required lay-verify="email" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">将会成为您唯一的登入名</div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="email_r" style="color: green;font-weight: bolder;" hidden></i>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="email_l" style="color: red; font-weight: bolder;" hidden>ဆ</i>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_username" class="layui-form-label">昵称</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="L_username" name="username" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_pass" class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" id="L_pass" name="password" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">6到16个字符</div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="pass_r" style="color: green;font-weight: bolder;" hidden></i>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="pass_l" style="color: red; font-weight: bolder;" hidden>ဆ</i>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_repass" class="layui-form-label">确认密码</label>
+                <div class="layui-input-inline">
+                  <input type="password" id="L_repass" name="repass" required lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="repass_r" style="color: green;font-weight: bolder;" hidden></i>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="repass_l" style="color: red; font-weight: bolder;" hidden>ဆ</i>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_phone" class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="L_phone" name="phone" required lay-verify="required"  autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <button type="button" id="sms" class="layui-btn layui-btn-sm layui-btn-normal">短信验证</button>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="phone_r" style="color: green;font-weight: bolder;" hidden></i>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="phone_l" style="color: red; font-weight: bolder;" hidden>ဆ</i>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label for="L_vercode" class="layui-form-label">验证码</label>
+                <div class="layui-input-inline">
+                  <input type="text" id="L_vercode" name="vercode" required lay-verify="required" placeholder="请填写短信验证码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="code_r" style="color: green;font-weight: bolder;" hidden></i>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                  <i class="layui-icon" id="code_l" style="color: red; font-weight: bolder;" hidden>ဆ</i>
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <button class="layui-btn" lay-filter="sub" lay-submit>立即注册</button>
+              </div>
+              <div class="layui-form-item fly-form-app">
+                <span>或者直接使用社交账号快捷注册</span>
+                <a href="" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" class="iconfont icon-qq" title="QQ登入"></a>
+                <a href="" onclick="layer.msg('正在通过微博登入', {icon:16, shade: 0.1, time:0})" class="iconfont icon-weibo" title="微博登入"></a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="fly-footer">
+  <p><a href="http://fly.layui.com/" target="_blank">Fly社区</a> 2017 &copy; <a href="http://www.layui.com/" target="_blank">layui.com 出品</a></p>
+  <p>
+    <a href="http://fly.layui.com/jie/3147/" target="_blank">付费计划</a>
+    <a href="http://www.layui.com/template/fly/" target="_blank">获取Fly社区模版</a>
+    <a href="http://fly.layui.com/jie/2461/" target="_blank">微信公众号</a>
+  </p>
+</div>
+
+<script th:src="@{/res/layui/layui.js}"></script>
+<script>
+  layui.use(['form','jquery','layer'], function () {
+    const form = layui.form;
+    const $ = layui.jquery;
+    const layer = layui.layer;
+
+    $("#L_email").blur(function () {
+      if($('#L_email').val() == "") return;
+      let judge = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+      if(!($('#L_email').val().match(judge))){
+        $('#email_l').removeAttr('hidden');
+        $('#email_r').attr('hidden','hidden');
+        layer.msg('请输入合法邮箱');
+      }else{
+        $('#email_r').removeAttr('hidden');
+        $('#email_l').attr('hidden','hidden');
+      }
+    });
+
+    $("#L_pass").blur(function () {
+      if($('#L_pass').val() == "") return;
+      let judge = /^[0-9a-zA-Z]{6,16}$/;
+      if(!($('#L_pass').val().match(judge))){
+        $('#pass_l').removeAttr('hidden');
+        $('#pass_r').attr('hidden','hidden');
+        layer.msg('请输入规定密码');
+      }else{
+        $('#pass_r').removeAttr('hidden');
+        $('#pass_l').attr('hidden','hidden');
+      }
+    });
+
+    $("#L_repass").blur(function () {
+      if($('#L_repass').val() == "") return;
+      if($('#L_pass').val() != $('#L_repass').val()){
+        $('#repass_l').removeAttr('hidden');
+        $('#repass_r').attr('hidden','hidden');
+        layer.msg('密码不一致');
+      }else{
+        $('#repass_r').removeAttr('hidden');
+        $('#repass_l').attr('hidden','hidden');
+      }
+    });
+
+    $("#L_phone").blur(function () {
+      if($('#L_phone').val() == "") return;
+      let judge = /^[1][3,4,5,7,8][0-9]{9}$/;
+      if(!($('#L_phone').val().match(judge))){
+        $('#phone_l').removeAttr('hidden');
+        $('#phone_r').attr('hidden','hidden');
+        layer.msg('请输入合法手机号');
+      }else{
+        $('#phone_r').removeAttr('hidden');
+        $('#phone_l').attr('hidden','hidden');
+      }
+    });
+
+    $("#sms").click(function () {
+      // 判断是否填写电话号码
+      if($("#L_phone").val() == ""){
+        layer.msg("请填写电话号码");
+        return;
+      }
+      $.ajax({
+        url: '/user/code',
+        data: {"phone" : $("#L_phone").val()},
+        dataType: 'json',
+        type: 'post',
+        success:function(data){
+          if (data.success) {
+            $('#phone_r').removeAttr('hidden');
+            $('#phone_l').attr('hidden','hidden');
+            layer.msg("发送成功,有效时间5分钟");
+          }else {
+            $('#phone_l').removeAttr('hidden');
+            $('#phone_r').attr('hidden','hidden');
+            layer.msg("发送失败,请稍后重试");
+          }
+        }
+      });
+    });
+
+    $("#L_vercode").blur(function () {
+      if($("#L_vercode").val() == "" || $("#L_phone").val() == "")
+        return;
+      $.ajax({
+        url: '/user/check/code',
+        data: JSON.stringify({"code":$("#L_vercode").val(), "phone":$("#L_phone").val()}),
+        contentType: "application/json",
+        dataType: 'json',
+        type: 'post',
+        success:function(data){
+          if (data.success) {
+            $('#code_r').removeAttr('hidden');
+            $('#code_l').attr('hidden','hidden');
+          }else {
+            $('#code_l').removeAttr('hidden');
+            $('#code_r').attr('hidden','hidden');
+            layer.msg('验证码不正确');
+          }
+        }
+      });
+    });
+
+    form.on('submit(sub)', function(data) {
+      if(!new RegExp("^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$").test(data.field.email)){
+        layer.msg("请输入有效邮箱");
+        return false;
+      }
+      if(!new RegExp("^[0-9a-zA-Z]{6,16}$").test(data.field.password)){
+        layer.msg("请输入有效密码");
+        return false;
+      }
+      if(!new RegExp("^[1][3,4,5,7,8][0-9]{9}$").test(data.field.phone)){
+        layer.msg("请输入有效电话");
+        return false;
+      }
+      if(data.field.vercode == ""){
+        layer.msg("请输入验证码");
+        return false;
+      }
+      $.ajax({
+        url:'/user/reg',
+        data:JSON.stringify(data.field),
+        contentType: "application/json",
+        dataType:'json',
+        type:'post',
+        success:function(data){
+          if (data.success) {
+            layer.msg("注册成功");
+            location.href = "/user/login";
+          }else {
+            layer.msg("注册失败");
+          }
+        }
+      });
+      //防止页面跳转
+      return false;
+    });
+  })
+</script>
+
+</body>
+</html>
