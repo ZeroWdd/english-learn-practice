@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>学习中心</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="fly,layui,前端社区">
+    <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
+    <link rel="stylesheet" th:href="@{/res/layui/css/layui.css}">
+    <link rel="stylesheet" th:href="@{/res/css/global.css}">
+</head>
+<body>
+
+<div th:replace="/common/header::header-div"></div>
+<div class="layui-container">
+    <div class="layui-row layui-col-space12">
+        <div class="layui-col-md8 layui-col-md-offset2" style="margin-top: 20px">
+
+            <div class="fly-panel" style="margin-bottom: 0;">
+
+                <div class="fly-panel-title fly-filter">
+                    <a href="" class="layui-this">单词</a>
+                    <span class="fly-mid"></span>
+                    <a href="">阅读</a>
+                    <span class="fly-mid"></span>
+                    <a href="">写作</a>
+                    <span class="fly-mid"></span>
+                    <span class="fly-filter-right layui-hide-xs">
+                    <a href="" class="layui-this">按最新</a>
+                    <span class="fly-mid"></span>
+                    <a href="">按热议</a>
+                  </span>
+                </div>
+
+                <ul class="fly-list">
+                    <li>
+                        <a href="#" class="fly-avatar">
+                            <img src="res/images/other/cet-4.png">
+                        </a>
+                        <h2>
+                            <a class="layui-badge">真题例句</a>
+                            <a href="#">2019四级真题核心词汇</a>
+                        </h2>
+                        <div class="fly-list-info">
+                            <span>1457词</span>
+                            <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
+                        </div>
+                        <div class="fly-list-badge">
+                            <button type="button" class="layui-btn">开始学习</button>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#" class="fly-avatar">
+                            <img src="res/images/other/cet-6.png">
+                        </a>
+                        <h2>
+                            <a class="layui-badge">真题例句</a>
+                            <a href="#">2019六级真题核心词汇</a>
+                        </h2>
+                        <div class="fly-list-info">
+                            <span>1457词</span>
+                            <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
+                        </div>
+                        <div class="fly-list-badge">
+                            <button type="button" class="layui-btn">开始学习</button>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#" class="fly-avatar">
+                            <img src="res/images/other/netem.png">
+                        </a>
+                        <h2>
+                            <a class="layui-badge">真题例句</a>
+                            <a href="#">考研真题核心词汇书</a>
+                        </h2>
+                        <div class="fly-list-info">
+                            <span>2321词</span>
+                            <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
+                        </div>
+                        <div class="fly-list-badge">
+                            <button type="button" class="layui-btn">开始学习</button>
+                        </div>
+                    </li>
+                </ul>
+                <div style="text-align: center">
+                    <div class="laypage-main">
+                        <a href="jie/index.html" class="laypage-next">更多求解</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/res/layui/layui.js}"></script>
+<script>
+    layui.use(['form', 'jquery', 'layer'], function () {
+        const $ = layui.jquery;
+        const layer = layui.layer;
+
+        $("#talk").removeClass("layui-this");
+        $("#learn").addClass("layui-this");
+        $("#exam").removeClass("layui-this");
+
+    });
+</script>
+
+</body>
+</html>

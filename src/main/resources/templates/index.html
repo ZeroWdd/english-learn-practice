@@ -11,46 +11,6 @@
 </head>
 <body>
 
-<!--<div class="fly-header layui-bg-black">-->
-<!--  <div class="layui-container">-->
-<!--    <a class="fly-logo" href="/">-->
-<!--      <img src="../res/images/logo.png" alt="layui">-->
-<!--    </a>-->
-<!--    <ul class="layui-nav fly-nav layui-hide-xs">-->
-<!--      <li class="layui-nav-item layui-this">-->
-<!--        <a href="/"><i class="iconfont icon-jiaoliu"></i>交流</a>-->
-<!--      </li>-->
-<!--      <li class="layui-nav-item">-->
-<!--        <a href="case/case.html"><i class="iconfont icon-iconmingxinganli"></i>案例</a>-->
-<!--      </li>-->
-<!--      <li class="layui-nav-item">-->
-<!--        <a href="http://www.layui.com/" target="_blank"><i class="iconfont icon-ui"></i>框架</a>-->
-<!--      </li>-->
-<!--    </ul>-->
-<!--    -->
-<!--    <ul class="layui-nav fly-nav-user">-->
-<!--      &lt;!&ndash; 登入后的状态 &ndash;&gt;-->
-<!--      &lt;!&ndash;-->
-<!--      <li class="layui-nav-item">-->
-<!--        <a class="fly-nav-avatar" href="javascript:;">-->
-<!--          <cite class="layui-hide-xs">贤心</cite>-->
-<!--          <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：layui 作者"></i>-->
-<!--          <i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>-->
-<!--          <img src="https://tva1.sinaimg.cn/crop.0.0.118.118.180/5db11ff4gw1e77d3nqrv8j203b03cweg.jpg">-->
-<!--        </a>-->
-<!--        <dl class="layui-nav-child">-->
-<!--          <dd><a href="user/set.html"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>-->
-<!--          <dd><a href="user/message.html"><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a></dd>-->
-<!--          <dd><a href="user/home.html"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a></dd>-->
-<!--          <hr style="margin: 5px 0;">-->
-<!--          <dd><a href="/user/logout/" style="text-align: center;">退出</a></dd>-->
-<!--        </dl>-->
-<!--      </li>-->
-<!--      &ndash;&gt;-->
-<!--    </ul>-->
-<!--  </div>-->
-<!--</div>-->
-
 <div th:replace="/common/header::header-div"></div>
 
 <div class="fly-panel fly-column">
@@ -606,16 +566,16 @@
       <div class="fly-panel fly-signin">
         <div class="fly-panel-title">
           签到
-          <i class="fly-mid"></i> 
+          <i class="fly-mid"></i>
           <a href="javascript:;" class="fly-link" id="LAY_signinHelp">说明</a>
-          <i class="fly-mid"></i> 
+          <i class="fly-mid"></i>
           <a href="javascript:;" class="fly-link" id="LAY_signinTop">活跃榜<span class="layui-badge-dot"></span></a>
           <span class="fly-signin-days">已连续签到<cite>16</cite>天</span>
         </div>
         <div class="fly-panel-main fly-signin-main">
           <button class="layui-btn layui-btn-danger" id="LAY_signin">今日签到</button>
           <span>可获得<cite>5</cite>飞吻</span>
-          
+
           <!-- 已签到状态 -->
           <!--
           <button class="layui-btn layui-btn-disabled">今日已签到</button>
@@ -748,7 +708,7 @@
           <a href="http://layim.layui.com/?from=fly" target="_blank" class="fly-zanzhu" time-limit="2017.09.25-2099.01.01" style="background-color: #5FB878;">LayIM 3.0 - layui 旗舰之作</a>
         </div>
       </div>
-      
+
       <div class="fly-panel fly-link">
         <h3 class="fly-panel-title">友情链接</h3>
         <dl class="fly-panel-main">
@@ -775,20 +735,15 @@
  
 <script th:src="@{/res/layui/layui.js}"></script>
 <script>
-layui.cache.page = '';
-layui.cache.user = {
-  username: '游客'
-  ,uid: -1
-  ,avatar: '../res/images/avatar/00.jpg'
-  ,experience: 83
-  ,sex: '男'
-};
-layui.config({
-  version: "3.0.0"
-  ,base: '../res/mods/' //这里实际使用时，建议改成绝对路径
-}).extend({
-  fly: 'index'
-}).use('fly');
+  layui.use(['form','jquery','layer'], function () {
+    const $ = layui.jquery;
+    const layer = layui.layer;
+
+    $("#talk").addClass("layui-this");
+    $("#learn").removeClass("layui-this");
+    $("#exam").removeClass("layui-this");
+
+  });
 </script>
 
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_30088308'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "w.cnzz.com/c.php%3Fid%3D30088308' type='text/javascript'%3E%3C/script%3E"));</script>

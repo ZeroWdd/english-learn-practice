@@ -1,6 +1,7 @@
 package com.learn.web.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -23,5 +24,10 @@ public class BaseController {
     @RequestMapping("/user/reg")
     public String reg(){
         return "user/reg";
+    }
+
+    @RequestMapping("/learn")
+    public String learn(){
+        return "learn/index";
     }
 }
