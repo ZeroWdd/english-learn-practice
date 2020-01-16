@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.web.mapper.AdminMapper">
+    <resultMap id="BaseResultMap" type="com.learn.web.pojo.Admin">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="rid" jdbcType="INTEGER" property="rid" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="createtime" jdbcType="VARCHAR" property="createtime" />
+
+        <!-- 添加元素 -->
+        <result column="roleName" jdbcType="VARCHAR" property="roleName" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id,username,password,phone,email,rid,status,createtime
+    </sql>
+
+
+    <select id="queryList" resultMap="BaseResultMap" >
+        <!-- 根据条件查询 所有信息 -->
+        select
+        admin.*,role.name as roleName
+        from admin,role
+        <where>
+            <if test="username!=null"> and admin.username LIKE concat("%",#{username},"%") </if>
+            <if test="email!=null"> and admin.email = #{email} </if>
+            <if test="phone!=null"> and admin.phone = #{phone} </if>
+            <if test="rid!=null"> and admin.rid = #{rid} </if>
+            and admin.rid = role.id
+        </where>
+        limit #{startIndex},#{pagesize}
+    </select>
+
+    <select id="queryCount" resultType="int" >
+        select count(*) from admin,role
+        <where>
+            <if test="username!=null"> and username LIKE concat("%",#{username},"%") </if>
+            <if test="email!=null"> and email = #{email} </if>
+            <if test="phone!=null"> and phone = #{phone} </if>
+            <if test="rid!=null"> and admin.rid = #{rid} </if>
+            and admin.rid = role.id
+        </where>
+    </select>
+
+</mapper>

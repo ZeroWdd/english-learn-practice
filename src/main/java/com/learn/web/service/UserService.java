@@ -2,6 +2,7 @@ package com.learn.web.service;
 
 import com.learn.web.mapper.UserMapper;
 import com.learn.web.pojo.User;
+import com.learn.web.util.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class UserService{
     public int login(User user) {
         User one = userMapper.selectOne(user);
         if(one != null){
-            session.setAttribute("user",one);
+            session.setAttribute(Const.USER,one);
         }
         return one == null ? 0 : 1;
     }
