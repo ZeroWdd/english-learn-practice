@@ -41,9 +41,9 @@ public class PermissionController {
      */
     @PostMapping("/treeMenu")
     public Object treeMenu(HttpSession session){
-        if(!StringUtils.isEmpty(session.getAttribute(Const.TREEMENU))){
-            return session.getAttribute(Const.TREEMENU);
-        }
+//        if(!StringUtils.isEmpty(session.getAttribute(Const.TREEMENU))){
+//            return session.getAttribute(Const.TREEMENU);
+//        }
         Admin admin = (Admin) session.getAttribute(Const.ADMIN);
         List<TreeMenu> treeMenuList = treeMenuService.selectByAdminId(admin.getId());
         session.setAttribute(Const.TREEMENU,treeMenuList);
@@ -85,16 +85,12 @@ public class PermissionController {
     @PostMapping("/addPermission")
     public AjaxResult submitAddPermission(TreeMenu treeMenu){
         TreeMenu byName = treeMenuService.selectByName(treeMenu.getName());
-        TreeMenu byUrl = treeMenuService.selectByUrl(treeMenu.getUrl());
+//        TreeMenu byUrl = treeMenuService.selectByUrl(treeMenu.getUrl());
 
         if(treeMenu.getId() !=null){
             //修改
             if(byName != null && !byName.getId().equals(treeMenu.getId())){
                 ajaxResult.ajaxFalse("权限名已存在");
-                return ajaxResult;
-            }
-            if(byUrl != null && !byUrl.getId().equals(treeMenu.getId())){
-                ajaxResult.ajaxFalse("地址已存在");
                 return ajaxResult;
             }
             int count = treeMenuService.editByPermission(treeMenu);
@@ -107,10 +103,6 @@ public class PermissionController {
             //添加
             if(byName != null){
                 ajaxResult.ajaxFalse("权限名已存在");
-                return ajaxResult;
-            }
-            if(byUrl != null){
-                ajaxResult.ajaxFalse("地址已存在");
                 return ajaxResult;
             }
             //若是添加父节点

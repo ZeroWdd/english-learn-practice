@@ -198,4 +198,9 @@ public class BaseController {
         model.addAttribute("id",id);
         return "/manager/role/allotPer";
     }
+
+    @GetMapping("/manager/word")
+    public String word(){
+        return "manager/word/wordList";
+    }
 }
