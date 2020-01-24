@@ -4,6 +4,7 @@ import com.learn.web.mapper.WordMapper;
 import com.learn.web.pojo.Log;
 import com.learn.web.pojo.Word;
 import com.learn.web.util.PageBean;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +32,32 @@ public class WordService {
         Integer totalsize = wordMapper.queryCount(paramMap);
         pageBean.setTotalsize(totalsize);
         return pageBean;
+    }
+
+    public Word selectByEnglish(String english) {
+        Word word = new Word();
+        word.setEnglish(english);
+        return wordMapper.selectOne(word);
+    }
+
+    public int editByWord(Word word) {
+        return wordMapper.updateByPrimaryKey(word);
+    }
+
+    public int insertWord(Word word) {
+        return wordMapper.insertSelective(word);
+    }
+
+    public Word selectById(Integer id) {
+        return wordMapper.selectByPrimaryKey(id);
+    }
+
+    public int delByWordIds(List<Integer> idList) {
+        String ids = StringUtils.join(idList, ",");
+        return wordMapper.deleteByIds(ids);
+    }
+
+    public int insertList(List<Word> words) {
+        return wordMapper.insertList(words);
     }
 }

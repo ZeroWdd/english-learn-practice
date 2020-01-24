@@ -1,13 +1,7 @@
 package com.learn.web.controller;
 
-import com.learn.web.pojo.Admin;
-import com.learn.web.pojo.Icon;
-import com.learn.web.pojo.Role;
-import com.learn.web.pojo.TreeMenu;
-import com.learn.web.service.AdminService;
-import com.learn.web.service.IconService;
-import com.learn.web.service.RoleService;
-import com.learn.web.service.TreeMenuService;
+import com.learn.web.pojo.*;
+import com.learn.web.service.*;
 import com.learn.web.util.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +28,8 @@ public class BaseController {
     private TreeMenuService treeMenuService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private WordService wordService;
 
     @RequestMapping("/index")
     public String index(){
@@ -202,5 +198,14 @@ public class BaseController {
     @GetMapping("/manager/word")
     public String word(){
         return "manager/word/wordList";
+    }
+
+    @GetMapping("/manager/addWord")
+    public String addWord(String type, Integer id, Model model){
+        if(type != null && type.equals("edit")){
+            Word word = wordService.selectById(id);
+            model.addAttribute(Const.WORD,word);
+        }
+        return "manager/word/addWord";
     }
 }

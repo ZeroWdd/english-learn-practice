@@ -24,24 +24,7 @@
                         <input type="text" id="chinese" name="chinese" placeholder="请输入" autocomplete="off" class="layui-input">
                     </div>
                 </div>
-<!--                <div class="layui-inline" style="width: 150px">-->
-<!--                    <label class="layui-form-label">英语四级</label>-->
-<!--                    <div class="layui-input-block">-->
-<!--                        <input type="checkbox" id="cetFour" name="cetFour" lay-skin="switch" lay-filter="switchTest" title="开关">-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="layui-inline" style="width: 150px">-->
-<!--                    <label class="layui-form-label">英语六级</label>-->
-<!--                    <div class="layui-input-block">-->
-<!--                        <input type="checkbox" id="cetSix" name="cetSix" lay-skin="switch" lay-filter="switchTest" title="开关">-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="layui-inline" style="width: 150px">-->
-<!--                    <label class="layui-form-label">考研英语</label>-->
-<!--                    <div class="layui-input-block">-->
-<!--                        <input type="checkbox" id="netem" name="netem" lay-skin="switch" lay-filter="switchTest" title="开关">-->
-<!--                    </div>-->
-<!--                </div>-->
+
                 <div class="layui-inline">
                     <button class="layui-btn layuiadmin-btn-admin" data-type="search_table">
                         <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
@@ -54,6 +37,7 @@
             <div style="padding-bottom: 10px;">
                 <button class="layui-btn layuiadmin-btn-admin" data-type="batchdel">删除</button>
                 <button class="layui-btn layuiadmin-btn-admin" data-type="add">添加</button>
+                <button type="button" class="layui-btn" id="upload"><i class="layui-icon"></i>xls/xlsx导入</button>
             </div>
 
             <table id="table" lay-filter="table"></table>
@@ -72,8 +56,9 @@
 
 <script>
 
-    layui.use(['jquery','layer', 'table'], function(){
+    layui.use(['jquery','upload','layer', 'table'], function(){
         let table = layui.table;
+        let upload = layui.upload;
         let layer = layui.layer;
         let $ = layui.jquery;
         //执行一个 table 实例
@@ -93,7 +78,7 @@
                     {field: 'chinese', title: '汉译', width: 160},
                     {field: 'cetFour', title: '四级单词', width:200,
                         templet:function (row) {
-                            if (row.status == 1){
+                            if (row.cetFour == '1'){
                                 return '<a class="layui-btn layui-btn-success layui-btn-xs">属于</a>';
                             }else{
                                 return '<a class="layui-btn layui-btn-danger layui-btn-xs">不属于</a>';
@@ -101,7 +86,7 @@
                         }},
                     {field: 'cetSix', title: '六级单词', width:120,
                         templet:function (row) {
-                            if (row.status == 1){
+                            if (row.cetSix == '1'){
                                 return '<a class="layui-btn layui-btn-success layui-btn-xs">属于</a>';
                             }else{
                                 return '<a class="layui-btn layui-btn-danger layui-btn-xs">不属于</a>';
@@ -109,7 +94,7 @@
                         }},
                     {field: 'netem', title: '考研单词', width: 150,
                         templet:function (row) {
-                            if (row.status == 1){
+                            if (row.netem == '1'){
                                 return '<a class="layui-btn layui-btn-success layui-btn-xs">属于</a>';
                             }else{
                                 return '<a class="layui-btn layui-btn-danger layui-btn-xs">不属于</a>';
@@ -122,13 +107,20 @@
             id: 'sreload'
         });
 
+        let uploadInst = upload.render({
+            elem: '#upload'
+            ,url: '/manager/upload' //改成您自己的上传接口
+            ,accept: 'file' //普通文件
+            ,done: function(res){
+                layer.msg('上传成功');
+                console.log(res);
+            }
+        });
+
         let active = {
             search_table: function(){
                 let english = $('#english');
                 let chinese = $('#chinese');
-                // let cetFour = $('#cetFour');
-                // let cetSix = $('#cetSix');
-                // let netem = $('#netem');
 
                 //执行重载
                 table.reload('sreload', {
@@ -141,19 +133,16 @@
                         //表示传到后台的参数
                         english: english.val(),
                         chinese: chinese.val(),
-                        // cetFour: cetFour.attr("checked") ? "1" : null,
-                        // cetSix: cetSix.val(),
-                        // netem: netem.val()
                     }
                 });
             },
             add: function() {
                 layer.open({
                     type: 2,
-                    title: '添加管理员',
+                    title: '添加单词',
                     skin: 'layui-layer-demo', //加上边框
                     area: ['500px', '450px'], //宽高
-                    content: '/manager/addAdmin'
+                    content: '/manager/addWord'
                 });
             },
             batchdel:function () {
@@ -167,7 +156,7 @@
                             jsonObj["ids["+i+"]"] = checkAll.data[i].id;
                         }
                         $.ajax({
-                            url:'/manager/delAdmin',
+                            url:'/manager/delWord',
                             data:jsonObj,
                             dataType:'json',
                             type:'post',
@@ -181,7 +170,6 @@
                         })
                     });
                 }
-
             }
         };
 
@@ -205,11 +193,11 @@
         function edit(data) {
             layer.open({
                 type: 2,
-                title: '修改管理员信息',
+                title: '修改单词',
                 skin: 'layui-layer-demo', //加上边框
                 area: ['500px', '450px'], //宽高
                 method: 'post',
-                content: '/manager/addAdmin?type=edit&id='+data.id
+                content: '/manager/addWord?type=edit&id='+data.id
             });
         }
         //后边两个参数仅仅是因为要执行动态删除dom
@@ -217,7 +205,7 @@
             var jsonObj = {};
             jsonObj["ids[0]"] = data.id;
             $.ajax({
-                url:'/manager/delAdmin',
+                url:'/manager/delWord',
                 data:jsonObj,
                 dataType:'json',
                 type:'post',
