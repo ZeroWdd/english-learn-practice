@@ -7,4 +7,5 @@ public class Const {
     public static final String ROLE = "role";
     public static final String ICON = "icon";
     public static final String WORD = "word";
+    public static final String WORD_MAP = "wordMap";
 }

@@ -1,6 +1,7 @@
 package com.learn.web.mapper;
 
 import com.learn.web.pojo.Word;
+import org.apache.ibatis.annotations.Delete;
 import tk.mybatis.mapper.common.IdsMapper;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;
@@ -17,4 +18,7 @@ public interface WordMapper extends Mapper<Word>, IdsMapper<Word>, MySqlMapper<W
     List<Word> queryList(Map<String, Object> paramMap);
 
     Integer queryCount(Map<String, Object> paramMap);
+
+    @Delete("delete from word")
+    void deleteAll();
 }

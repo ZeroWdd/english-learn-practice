@@ -4,7 +4,9 @@ import com.learn.web.pojo.Word;
 import com.learn.web.service.WordService;
 import com.learn.web.util.AjaxResult;
 import com.learn.web.util.Data;
+import com.learn.web.util.ListSplitUtil;
 import com.learn.web.util.PageBean;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -24,10 +26,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Auther: wdd
@@ -39,6 +38,8 @@ public class WordController {
 
     @Autowired
     private AjaxResult ajaxResult;
+    @Autowired
+    private ListSplitUtil splitUtil;
     @Autowired
     private WordService wordService;
 
@@ -112,8 +113,11 @@ public class WordController {
             String name = StringUtils.substringAfterLast(file.getOriginalFilename(), ".");
             if("xls".equals(name)){
                 workbook = new HSSFWorkbook(new BufferedInputStream(file.getInputStream()));
-            }else {
+            }else if("xlsx".equals(name)) {
                 workbook = new XSSFWorkbook(new BufferedInputStream(file.getInputStream()));
+            }else{
+                ajaxResult.ajaxFalse("格式不正确");
+                return ajaxResult;
             }
             Sheet sheet = workbook.getSheetAt(0);
             Row row = sheet.getRow(0); // 获取第0列数据
@@ -156,14 +160,28 @@ public class WordController {
                 }
                 words.add(word);
             }
-            int count = wordService.insertList(words);
-            if(count != words.size()){
-                ajaxResult.ajaxFalse("添加失败");
-                return ajaxResult;
-            }
-        } catch (IOException e) {
 
+            // 创建n个线程
+            int n = 10;
+            List<Thread> threads = new ArrayList<>();
+            List<List<Word>> lists = splitUtil.averageAssign(words, n);
+            for(int i = 0; i < n; i++){
+                int finalI = i;
+                Thread thread = new Thread(() -> {
+                    wordService.insertRedisWordByList(lists.get(finalI));
+                });
+                thread.start();
+                threads.add(thread);
+            }
+            for(Thread thread : threads) thread.join();
+            // 最后将redis中的数据存入数据库
+            wordService.insertListByRedis();
+
+        } catch (IOException | InterruptedException e) {
+            return ajaxResult.ajaxFalse();
         }
         return ajaxResult.ajaxSuccess();
     }
+
+
 }

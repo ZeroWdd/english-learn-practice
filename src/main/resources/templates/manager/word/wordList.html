@@ -113,8 +113,11 @@
             ,url: '/manager/upload' //改成您自己的上传接口
             ,accept: 'file' //普通文件
             ,done: function(res){
-                layer.msg('上传成功');
-                console.log(res);
+                if(res.success){
+                    layer.msg('上传成功');
+                }else{
+                    layer.msg(res.message);
+                }
             }
         });
 
