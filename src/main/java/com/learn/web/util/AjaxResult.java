@@ -1,11 +1,13 @@
 package com.learn.web.util;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AjaxResult {
     private boolean success;
     private String message;
+    private Object data;
 
     public boolean isSuccess() {
         return success;
@@ -41,5 +43,13 @@ public class AjaxResult {
     public AjaxResult ajaxSuccess(){
         this.success = true;
         return this;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }

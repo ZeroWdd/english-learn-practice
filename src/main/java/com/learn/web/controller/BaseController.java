@@ -2,11 +2,13 @@ package com.learn.web.controller;
 
 import com.learn.web.pojo.*;
 import com.learn.web.service.*;
+import com.learn.web.util.AjaxResult;
 import com.learn.web.util.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
@@ -47,7 +49,13 @@ public class BaseController {
     }
 
     @RequestMapping("/learn")
-    public String learn(){
+    public String learn(Model model){
+        int countCetFour = wordService.selectNumByCetFour();
+        int countCetSix = wordService.selectNumByCetSix();
+        int countNetem = wordService.selectNumByNetem();
+        model.addAttribute("countCetFour",countCetFour);
+        model.addAttribute("countCetSix",countCetSix);
+        model.addAttribute("countNetem",countNetem);
         return "learn/index";
     }
 
@@ -208,4 +216,25 @@ public class BaseController {
         }
         return "manager/word/addWord";
     }
+
+    @GetMapping("/user/logout")
+    public String logout(HttpSession session){
+        session.removeAttribute(Const.USER);
+        return "index";
+    }
+
+    @GetMapping("/learn/word/{type}")
+    public String learnWord(Model model,@PathVariable String type,HttpSession session){
+        User user = (User) session.getAttribute(Const.USER);
+        if(user == null){
+            return "/user/login";
+        }
+        List<Word> words = wordService.selectSome(type);
+        if(words == null){
+            return "/learn/index";
+        }
+        model.addAttribute(Const.WORD_LIST,words);
+        return "/learn/word";
+    }
+
 }

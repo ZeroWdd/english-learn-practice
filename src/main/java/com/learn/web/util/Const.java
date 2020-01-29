@@ -8,4 +8,10 @@ public class Const {
     public static final String ICON = "icon";
     public static final String WORD = "word";
     public static final String WORD_MAP = "wordMap";
+    public static final String WORD_LIST = "wordList";
+
+
+
+
+    public static final String WORD_LIST_BY_USER_ID = "wordList_";
 }

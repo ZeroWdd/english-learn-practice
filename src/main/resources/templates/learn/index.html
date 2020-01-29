@@ -39,14 +39,14 @@
                         </a>
                         <h2>
                             <a class="layui-badge">真题例句</a>
-                            <a href="#">2019四级真题核心词汇</a>
+                            <a href="#">四级真题核心词汇</a>
                         </h2>
                         <div class="fly-list-info">
-                            <span>1457词</span>
+                            <span th:text="'共' + ${countCetFour} + '词'"></span>
                             <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
                         </div>
                         <div class="fly-list-badge">
-                            <button type="button" class="layui-btn">开始学习</button>
+                            <button type="button" data-type="cetFour" class="layui-btn">开始学习</button>
                         </div>
                     </li>
                     <li>
@@ -55,14 +55,14 @@
                         </a>
                         <h2>
                             <a class="layui-badge">真题例句</a>
-                            <a href="#">2019六级真题核心词汇</a>
+                            <a href="#">六级真题核心词汇</a>
                         </h2>
                         <div class="fly-list-info">
-                            <span>1457词</span>
+                            <span th:text="'共' + ${countCetSix} + '词'"></span>
                             <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
                         </div>
                         <div class="fly-list-badge">
-                            <button type="button" class="layui-btn">开始学习</button>
+                            <button type="button" data-type="cetSix" class="layui-btn">开始学习</button>
                         </div>
                     </li>
                     <li>
@@ -74,11 +74,11 @@
                             <a href="#">考研真题核心词汇书</a>
                         </h2>
                         <div class="fly-list-info">
-                            <span>2321词</span>
+                            <span th:text="'共' + ${countNetem} + '词'"></span>
                             <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
                         </div>
                         <div class="fly-list-badge">
-                            <button type="button" class="layui-btn">开始学习</button>
+                            <button type="button" data-type="netem" class="layui-btn">开始学习</button>
                         </div>
                     </li>
                 </ul>
@@ -103,6 +103,12 @@
         $("#talk").removeClass("layui-this");
         $("#learn").addClass("layui-this");
         $("#exam").removeClass("layui-this");
+
+
+        $('.fly-list-badge button').on('click', function(){
+            let type = $(this).data('type');
+            window.location.href = "/learn/word/" + type;
+        });
 
     });
 </script>

@@ -735,9 +735,10 @@
  
 <script th:src="@{/res/layui/layui.js}"></script>
 <script>
-  layui.use(['form','jquery','layer'], function () {
+  layui.use(['form','jquery','layer','element'], function () {
     const $ = layui.jquery;
     const layer = layui.layer;
+    const element = layui.element;
 
     $("#talk").addClass("layui-this");
     $("#learn").removeClass("layui-this");

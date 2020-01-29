@@ -20,8 +20,8 @@ public class Word {
     private Integer id;
     private String english;
     private String chinese;
-    private String cetFour;
-    private String cetSix;
-    private String netem;
+    private String cetFour = "0";
+    private String cetSix = "0";
+    private String netem = "0";
 
 }
