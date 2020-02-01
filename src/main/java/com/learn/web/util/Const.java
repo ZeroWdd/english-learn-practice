@@ -13,5 +13,6 @@ public class Const {
 
 
 
-    public static final String WORD_LIST_BY_USER_ID = "wordList_";
+    public static final String WORD_LIST_BY_USER_ID_AND_TYPE = "wordList_";
+    public static final String WORD_TYPE = "wordType";
 }

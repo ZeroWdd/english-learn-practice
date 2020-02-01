@@ -2,6 +2,7 @@ package com.learn.web.mapper;
 
 import com.learn.web.pojo.Word;
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import tk.mybatis.mapper.common.IdsMapper;
@@ -32,4 +33,7 @@ public interface WordMapper extends Mapper<Word>, IdsMapper<Word>, MySqlMapper<W
 
     @Select("select word.* from word,user_word where user_word.user_id = #{id} and user_word.word_id = word.id")
     List<Word> selectByUserId(Integer id);
+
+    @Insert("insert into user_word(user_id,word_id) values(#{userId},#{wordId})")
+    void insertUserWord(Integer userId, Integer wordId);
 }

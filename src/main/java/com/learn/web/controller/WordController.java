@@ -181,6 +181,19 @@ public class WordController {
         return ajaxResult.ajaxSuccess();
     }
 
+    @PostMapping("/learn/word/{type}/{word}")
+    public AjaxResult word(@PathVariable String word, @PathVariable String type){
+        if(wordService.studyOne(type,word)){
+            return ajaxResult.ajaxSuccess();
+        }
+        return ajaxResult.ajaxFalse();
+    }
 
-
+    @PostMapping("/learn/word/change/{type}")
+    public AjaxResult change(@PathVariable String type){
+        if(wordService.changeGroup(type)){
+            return ajaxResult.ajaxSuccess();
+        }
+        return ajaxResult.ajaxFalse();
+    }
 }

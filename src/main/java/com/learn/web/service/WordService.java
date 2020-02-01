@@ -11,6 +11,7 @@ import com.learn.web.pojo.Word;
 import com.learn.web.util.Const;
 import com.learn.web.util.PageBean;
 
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 
 import javax.servlet.http.HttpSession;
@@ -105,7 +107,7 @@ public class WordService {
     }
 
     public void insertListByRedis() {
-        // 使用stream将map转为list
+        // 将map转为list
         Map map = gson.fromJson(redisTemplate.opsForValue().get(Const.WORD_MAP), HashMap.class);
         List<Word> words = new ArrayList<>();
         for(Object o : map.values()){
@@ -121,41 +123,43 @@ public class WordService {
 
 
     public int selectNumByCetFour() {
-        Word word = new Word();
-        word.setCetFour("1");
-        return wordMapper.selectCount(word);
+        Example example = new Example(Word.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("cetFour","1");
+        return wordMapper.selectCountByExample(example);
     }
 
     public int selectNumByCetSix() {
-        Word word = new Word();
-        word.setCetSix("1");
-        return wordMapper.selectCount(word);
+        Example example = new Example(Word.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("cetSix","1");
+        return wordMapper.selectCountByExample(example);
     }
 
     public int selectNumByNetem() {
-        Word word = new Word();
-        word.setNetem("1");
-        return wordMapper.selectCount(word);
+        Example example = new Example(Word.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("netem","1");
+        return wordMapper.selectCountByExample(example);
     }
 
+    /**
+     * 随机抽取20个单词
+     * @param type
+     * @return
+     */
     public List<Word> selectSome(String type) {
         try {
             // 首先看看redis缓存是否有数据
             User user = (User) session.getAttribute(Const.USER);
-            String json = redisTemplate.opsForValue().get(Const.WORD_LIST_BY_USER_ID + user.getId());
-            if(StringUtils.isEmpty(json)){
+            String json = redisTemplate.opsForValue().get(Const.WORD_LIST_BY_USER_ID_AND_TYPE + user.getId() + "_" + type);
+            List<Word> fromJson = gson.fromJson(json, new TypeToken<List<Word>>(){}.getType());
+            if(StringUtils.isEmpty(json) || fromJson.size() == 0){
                 List<Word> words = new ArrayList();
-                switch (type){
-                    case "cetFour" :
-                        words = wordMapper.selectSomeByType("1","0","0");
-                        break;
-                    case "cetSix" :
-                        words = wordMapper.selectSomeByType("0","1","0");
-                        break;
-                    case "netem" :
-                        words = wordMapper.selectSomeByType("0","0","1");
-                        break;
-                }
+                Example example = new Example(Word.class);
+                Example.Criteria criteria = example.createCriteria();
+                criteria.andEqualTo(type,"1");
+                words = wordMapper.selectByExample(example);
                 // 调处用户学习了的
                 List<Word> wordsByUserId = wordMapper.selectByUserId(user.getId());
                 //删选
@@ -178,12 +182,55 @@ public class WordService {
                         list.add(words.get(random.nextInt(words.size())));
                     }
                 }
-                redisTemplate.opsForValue().set(Const.WORD_LIST_BY_USER_ID + user.getId(),gson.toJson(list));
+                redisTemplate.opsForValue().set(Const.WORD_LIST_BY_USER_ID_AND_TYPE + user.getId() + "_" + type,gson.toJson(list));
                 return list;
             }
             return gson.fromJson(json, new TypeToken<List<Word>>(){}.getType());
         }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 学习了一个单词
+     * @param type
+     * @param word
+     * @return
+     */
+    public boolean studyOne(String type,String word) {
+        // 从redis中删除
+        User user = (User) session.getAttribute(Const.USER);
+        String json = redisTemplate.opsForValue().get(Const.WORD_LIST_BY_USER_ID_AND_TYPE + user.getId() + "_" + type);
+        List<Word> words = gson.fromJson(json, new TypeToken<List<Word>>(){}.getType());
+        boolean flag = false;
+        Integer wordId = -1;
+        for(Word w : words){
+            if(w.getEnglish().equals(word)){
+                wordId = w.getId();
+                words.remove(w);
+                flag = true;
+                break;
+            }
+        }
+        if(flag){
+            redisTemplate.opsForValue().set(Const.WORD_LIST_BY_USER_ID_AND_TYPE + user.getId() + "_" + type,gson.toJson(words));
+            // 保存到mysql
+            wordMapper.insertUserWord(user.getId(), wordId);
+        }
+        return flag;
+    }
+
+    /**
+     * 换一组单词
+     * @param type
+     * @return
+     */
+    public boolean changeGroup(String type) {
+        // 先删除redis中数据
+        User user = (User) session.getAttribute(Const.USER);
+        redisTemplate.delete(Const.WORD_LIST_BY_USER_ID_AND_TYPE + user.getId() + "_" + type);
+        // 直接返回true 刷新页面即可
+        return true;
     }
 }

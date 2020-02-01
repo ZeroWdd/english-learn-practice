@@ -234,6 +234,7 @@ public class BaseController {
             return "/learn/index";
         }
         model.addAttribute(Const.WORD_LIST,words);
+        model.addAttribute(Const.WORD_TYPE,type);
         return "/learn/word";
     }
 

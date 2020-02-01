@@ -10,17 +10,19 @@
     <link rel="stylesheet" th:href="@{/res/css/global.css}">
     <link rel="stylesheet" th:href="@{/bootstrap/bootstrap.min.css}">
     <style>
-        .list-group-item:hover {background: #BBBBBB; cursor:pointer;}
+        li.list-group-item:hover {background: #BBBBBB; cursor:pointer;}
         .selected-word {background: #BBBBBB;}
+        .study-word {background: rgb(99,186,121)}
     </style>
 </head>
 <body>
 <div th:replace="/common/header::header-div"></div>
 
 <div class="container-fluid" style="background-color: rgb(242,242,242)">
+    <div id="type" style="display: none" th:text="${wordType}"></div>
     <div class="row">
         <div class="col-md-3" style="margin:20px 80px">
-            <a class="list-group-item active">单词列表</a>
+            <a class="list-group-item active">单词列表<button style="margin-left: 20px" type="button" onClick="changeGroup()" class="layui-btn layui-btn-danger">换一组</button></a>
             <ul class="list-group" style="overflow: auto; height: 400px">
                 <li class="list-group-item" onClick="changeWord(this)" th:each="word:${wordList}" th:text="${word.english}+'----'+${word.chinese}">english 中文</li>
             </ul>
@@ -37,10 +39,11 @@
                     </p>
                 </div>
                 <p align="center">
-                    <a class="btn btn-primary" onClick="preWord()">«上一个</a>
+                    <button type="button" onClick="preWord()" class="layui-btn layui-btn-normal"><i class="layui-icon"></i></button>
                     <audio id="m_aud"></audio>
                     <img src="/res/images/play.png" id="m_playpause" />
-                    <a class="btn btn-primary" onClick="nextWord()">下一个»</a>
+                    <button type="button" onClick="nextWord()" class="layui-btn layui-btn-normal"><i class="layui-icon"></i></button>
+                    <button type="button" onClick="learn()" class="layui-btn layui-btn-radius">认识</button>
                 </p>
             </div>
         </div>
@@ -79,6 +82,38 @@
             if(nextWord != null) changeWord(nextWord);
         };
 
+        window.learn = function () {
+            $.ajax({
+                url:'/learn/word/' + $("#type").html() + '/' + $(word).html().toString().split("----")[0],
+                contentType: "application/json",
+                dataType:'json',
+                type:'post',
+                success:function(data){
+                    if (data.success) {
+                        $(word).addClass("study-word");
+                        nextWord();
+                    }else {
+
+                    }
+                }
+            });
+        };
+
+        window.changeGroup = function () {
+            $.ajax({
+                url:'/learn/word/change/'  + $("#type").html(),
+                contentType: "application/json",
+                dataType:'json',
+                type:'post',
+                success:function(data){
+                    if (data.success) {
+                       window.location.reload();
+               ``     }else {
+
+                    }
+                }
+            });
+        };
 
         $("#m_playpause").click(function() {
             if ($("#m_aud")[0].paused) {
@@ -93,6 +128,7 @@
         $("#m_aud")[0].addEventListener("pause", function (e) {
             $("#m_playpause").attr("src","/res/images/play.png");
         }, false);
+
     });
 
 </script>
