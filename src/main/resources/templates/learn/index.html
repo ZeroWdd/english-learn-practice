@@ -19,20 +19,15 @@
             <div class="fly-panel" style="margin-bottom: 0;">
 
                 <div class="fly-panel-title fly-filter">
-                    <a href="" class="layui-this">单词</a>
+                    <a href="javascript:;" onclick="show(this)" class="show layui-this">单词</a>
                     <span class="fly-mid"></span>
-                    <a href="">阅读</a>
+                    <a href="javascript:;" onclick="show(this)" class="show">阅读</a>
                     <span class="fly-mid"></span>
-                    <a href="">写作</a>
+                    <a href="javascript:;" onclick="show(this)" class="show">写作</a>
                     <span class="fly-mid"></span>
-                    <span class="fly-filter-right layui-hide-xs">
-                    <a href="" class="layui-this">按最新</a>
-                    <span class="fly-mid"></span>
-                    <a href="">按热议</a>
-                  </span>
                 </div>
 
-                <ul class="fly-list">
+                <ul class="fly-list word">
                     <li>
                         <a href="#" class="fly-avatar">
                             <img src="res/images/other/cet-4.png">
@@ -82,11 +77,61 @@
                         </div>
                     </li>
                 </ul>
-                <div style="text-align: center">
-                    <div class="laypage-main">
-                        <a href="jie/index.html" class="laypage-next">更多求解</a>
-                    </div>
-                </div>
+
+                <ul class="fly-list read" style="display: none">
+
+                </ul>
+
+                <ul class="fly-list write" style="display: none">
+                    <li>
+                        <a href="#" class="fly-avatar">
+                            <img src="res/images/other/cet-4.png">
+                        </a>
+                        <h2>
+                            <a class="layui-badge">真题例句</a>
+                            <a href="#">四级真题核心词汇</a>
+                        </h2>
+                        <div class="fly-list-info">
+                            <span th:text="'共' + ${countCetFour} + '词'"></span>
+                            <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
+                        </div>
+                        <div class="fly-list-badge">
+                            <button type="button" data-type="cetFour" class="layui-btn">开始学习</button>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#" class="fly-avatar">
+                            <img src="res/images/other/cet-6.png">
+                        </a>
+                        <h2>
+                            <a class="layui-badge">真题例句</a>
+                            <a href="#">六级真题核心词汇</a>
+                        </h2>
+                        <div class="fly-list-info">
+                            <span th:text="'共' + ${countCetSix} + '词'"></span>
+                            <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
+                        </div>
+                        <div class="fly-list-badge">
+                            <button type="button" data-type="cetSix" class="layui-btn">开始学习</button>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#" class="fly-avatar">
+                            <img src="res/images/other/netem.png">
+                        </a>
+                        <h2>
+                            <a class="layui-badge">真题例句</a>
+                            <a href="#">考研真题核心词汇书</a>
+                        </h2>
+                        <div class="fly-list-info">
+                            <span th:text="'共' + ${countNetem} + '词'"></span>
+                            <span class="layui-badge fly-badge-accept layui-hide-xs">已结</span>
+                        </div>
+                        <div class="fly-list-badge">
+                            <button type="button" data-type="netem" class="layui-btn">开始学习</button>
+                        </div>
+                    </li>
+                </ul>
 
             </div>
         </div>
@@ -100,6 +145,8 @@
     layui.use(['form', 'jquery', 'layer'], function () {
         const $ = layui.jquery;
         const layer = layui.layer;
+
+        let num = 5; // 默认阅读数量
 
         $("#talk").removeClass("layui-this");
         $("#learn").addClass("layui-this");
@@ -136,6 +183,44 @@
             window.location.href = "/learn/word/" + type;
         });
 
+        window.show = function (that) {
+            $(".show").removeClass("layui-this");
+            $(that).addClass("layui-this");
+            $(".fly-list").hide();
+            if($(that).html() == "单词") $(".word").show();
+            if($(that).html() == "阅读"){
+                let content = "";
+                $(".read").show();
+                $.ajax({
+                    url:'/learn/read/' + num,
+                    dataType:"json",
+                    type:'get',
+                    success:function(data){
+                        if(data.success){
+                            data.data.forEach(function (read) {
+                                content += "<li>" +
+                                    "                        <h2 style='margin-left: -50px'>" +
+                                    "                            <a href=\"#\">"+ read.title +"</a>" +
+                                    "                        </h2>" +
+                                    "                        <div class=\"fly-list-info\" style='margin-left: -50px'>" +
+                                    "                            <span>"+ read.english.substring(0,100) +"</span>" +
+                                    "                        </div>" +
+                                    "                        <div class=\"fly-list-badge\">" +
+                                    "                            <button type=\"button\" onclick='read("+ read.id +")' class=\"layui-btn\">开始学习</button>" +
+                                    "                        </div>" +
+                                    "       </li>"
+                            })
+                            $(".read").html(content);
+                        }
+                    }
+                });
+            }
+            if($(that).html() == "写作") $(".write").show();
+        }
+
+        window.read = function (id) {
+            window.location.href = "/learn/read/one/" + id;
+        }
     });
 </script>
 

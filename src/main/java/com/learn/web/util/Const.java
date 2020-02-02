@@ -9,6 +9,7 @@ public class Const {
     public static final String WORD = "word";
     public static final String WORD_MAP = "wordMap";
     public static final String WORD_LIST = "wordList";
+    public static final String READ = "read";
 
 
 

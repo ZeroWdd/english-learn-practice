@@ -32,6 +32,8 @@ public class BaseController {
     private RoleService roleService;
     @Autowired
     private WordService wordService;
+    @Autowired
+    private ReadService readService;
 
     @RequestMapping("/index")
     public String index(){
@@ -236,6 +238,13 @@ public class BaseController {
         model.addAttribute(Const.WORD_LIST,words);
         model.addAttribute(Const.WORD_TYPE,type);
         return "/learn/word";
+    }
+
+    @GetMapping("/learn/read/one/{id}")
+    public String read(@PathVariable String id,Model model){
+        Read read = readService.selectOne(id);
+        model.addAttribute(Const.READ,read);
+        return "learn/read";
     }
 
 }
