@@ -733,16 +733,7 @@
   </p>
 </div>
 
-<div class="thumbnail" id="tr" style="background:rgba(255,255,255,0.6); margin: 20px 50px;height: 200px;width: 300px; display: none">
-  <div style="margin: 10px 20px;">
-    <p>
-    <h1 style="margin-left: -40px">『</h1>
-    <p id="english" align="center" style="font-size: 50px"></p>
-    <p id="chinese" align="center"></p>
-    <h1 style="margin-top: 30px;margin-right: 10px" align="right">』</h1>
-    </p>
-  </div>
-</div>
+<div th:replace="/common/translate::translate-div"></div>
  
 <script th:src="@{/res/layui/layui.js}"></script>
 <script>
@@ -778,7 +769,8 @@
           }
         }
       });
-    }
+    };
+
   });
 </script>
 

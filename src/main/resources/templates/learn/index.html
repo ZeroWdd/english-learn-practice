@@ -93,6 +93,7 @@
     </div>
 </div>
 
+<div th:replace="/common/translate::translate-div"></div>
 
 <script th:src="@{/res/layui/layui.js}"></script>
 <script>
@@ -104,6 +105,31 @@
         $("#learn").addClass("layui-this");
         $("#exam").removeClass("layui-this");
 
+        window.translation = function (that) {
+            let word = $(that).parent().prev().children().val() ;
+            if(word == "" ) return;
+            $.ajax({
+                url:'/learn/word/one/' + word,
+                dataType:"json",
+                type:'get',
+                success:function(data){
+                    if(data.success){
+                        let english = data.data.english;
+                        let chinese = data.data.chinese;
+                        $("#english").html(english);
+                        $("#chinese").html(chinese);
+                        layer.open({
+                            type: 1,
+                            title: '单词信息',
+                            content: $('#tr')//这里content是一个普通的String
+                        });
+                    }else{
+                        layer.msg("单词不存在")
+                        return;
+                    }
+                }
+            });
+        };
 
         $('.fly-list-badge button').on('click', function(){
             let type = $(this).data('type');
