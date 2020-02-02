@@ -196,4 +196,14 @@ public class WordController {
         }
         return ajaxResult.ajaxFalse();
     }
+
+    @GetMapping("/learn/word/one/{word}")
+    public AjaxResult word(@PathVariable String word){
+        Word select = wordService.selectByEnglish(word);
+        if(select == null){
+            return ajaxResult.ajaxFalse();
+        }
+        ajaxResult.setData(select);
+        return ajaxResult.ajaxSuccess();
+    }
 }

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8">
-  <title>基于 layui 的极简社区页面模版</title>
+  <title>交流中心</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="keywords" content="fly,layui,前端社区">
   <meta name="description" content="Fly社区是模块化前端UI框架Layui的官网社区，致力于为web开发提供强劲动力">
@@ -732,22 +732,56 @@
     <a href="http://fly.layui.com/jie/2461/" target="_blank">微信公众号</a>
   </p>
 </div>
+
+<div class="thumbnail" id="tr" style="background:rgba(255,255,255,0.6); margin: 20px 50px;height: 200px;width: 300px; display: none">
+  <div style="margin: 10px 20px;">
+    <p>
+    <h1 style="margin-left: -40px">『</h1>
+    <p id="english" align="center" style="font-size: 50px"></p>
+    <p id="chinese" align="center"></p>
+    <h1 style="margin-top: 30px;margin-right: 10px" align="right">』</h1>
+    </p>
+  </div>
+</div>
  
 <script th:src="@{/res/layui/layui.js}"></script>
 <script>
-  layui.use(['form','jquery','layer','element'], function () {
+  layui.use(['jquery','layer'], function () {
     const $ = layui.jquery;
     const layer = layui.layer;
-    const element = layui.element;
 
     $("#talk").addClass("layui-this");
     $("#learn").removeClass("layui-this");
     $("#exam").removeClass("layui-this");
 
+    window.translation = function (that) {
+      let word = $(that).parent().prev().children().val() ;
+      if(word == "" ) return;
+      $.ajax({
+        url:'/learn/word/one/' + word,
+        dataType:"json",
+        type:'get',
+        success:function(data){
+          if(data.success){
+            let english = data.data.english;
+            let chinese = data.data.chinese;
+            $("#english").html(english);
+            $("#chinese").html(chinese);
+            layer.open({
+              type: 1,
+              title: '单词信息',
+              content: $('#tr')//这里content是一个普通的String
+            });
+          }else{
+            layer.msg("单词不存在")
+            return;
+          }
+        }
+      });
+    }
   });
 </script>
 
-<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_30088308'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "w.cnzz.com/c.php%3Fid%3D30088308' type='text/javascript'%3E%3C/script%3E"));</script>
 
 </body>
 </html>
