@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加短文</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+</head>
+<body>
+    <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
+        <input type="hidden" name="id" th:if="${read}" th:value="${read.id}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题(英)</label>
+            <div class="layui-input-inline">
+                <input th:value="${read != null}?${read.title}:''" type="text" name="title" lay-verify="required" placeholder="请输入标题(英)" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题(汉)</label>
+            <div class="layui-input-inline">
+                <input th:value="${read != null}?${read.titleChinese}:''" type="text" name="titleChinese" lay-verify="required" placeholder="请输入标题(汉)" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">短语(英)</label>
+            <div class="layui-input-inline">
+                <textarea th:text="${read != null}?${read.english}:''" name="english" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">短语(汉)</label>
+            <div class="layui-input-inline">
+                <textarea th:text="${read != null}?${read.chinese}:''" name="chinese" placeholder="请输入内容" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button th:text="${read != null}?'立即修改':'立即添加'" class="layui-btn" lay-submit="" lay-filter="addRead">立即添加</button>
+                <button th:if="${read == null}" type="reset" id="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/layuiadmin/layui/layui.js}"></script>
+    <script>
+
+        layui.use(['form','jquery'], function () {
+            const form = layui.form;
+            const $ = layui.jquery;
+            form.on('submit(addRead)',function (data) {
+                $.ajax({
+                    url:'/manager/addRead',
+                    data:data.field,
+                    dataType:'json',
+                    type:'post',
+                    success:function (data) {
+                        if (data.success){
+                            layer.msg(data.message);
+                            layer.alert(data.message,function(){
+                                window.parent.location.reload();//刷新父页面
+                                parent.layer.close(index);//关闭弹出层
+                            });
+                        }else{
+                            layer.msg(data.message);
+                        }
+                    }
+                });
+                return false;
+            })
+
+            //重置
+            $("#reset").click(function () {
+                $("input").val("");
+            })
+
+        });
+
+
+    </script>
+</body>
+</html>

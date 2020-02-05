@@ -5,6 +5,8 @@
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="english" jdbcType="VARCHAR" property="english" />
         <result column="chinese"  jdbcType="VARCHAR" property="chinese" />
+        <result column="title"  jdbcType="VARCHAR" property="title" />
+        <result column="title_chinese"  jdbcType="VARCHAR" property="titleChinese" />
         <result column="read_time"  jdbcType="VARCHAR" property="readTime" />
     </resultMap>
 

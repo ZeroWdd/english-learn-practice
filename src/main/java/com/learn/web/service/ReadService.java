@@ -3,7 +3,10 @@ package com.learn.web.service;
 import com.learn.web.mapper.ReadMapper;
 import com.learn.web.pojo.Log;
 import com.learn.web.pojo.Read;
+import com.learn.web.util.Data;
+import com.learn.web.util.DateUtil;
 import com.learn.web.util.PageBean;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +45,26 @@ public class ReadService {
         Integer totalsize = readMapper.queryCount(paramMap);
         pageBean.setTotalsize(totalsize);
         return pageBean;
+    }
+
+    public Read selectById(Integer id) {
+        return readMapper.selectByPrimaryKey(id);
+    }
+
+    public int editByRead(Read read) {
+        String stringDate = DateUtil.getStringDate("yyyy-MM-dd HH:mm:ss");
+        read.setReadTime(stringDate);
+        return readMapper.updateByPrimaryKey(read);
+    }
+
+    public int insertRead(Read read) {
+        String stringDate = DateUtil.getStringDate("yyyy-MM-dd HH:mm:ss");
+        read.setReadTime(stringDate);
+        return readMapper.insert(read);
+    }
+
+    public int delByReadIds(List<Integer> idList) {
+        String ids = StringUtils.join(idList, ",");
+        return readMapper.deleteByIds(ids);
     }
 }

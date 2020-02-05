@@ -251,4 +251,20 @@ public class BaseController {
     public String read(){
         return "manager/read/readList";
     }
+
+    /**
+     * 跳转添加短文页面
+     * @param type
+     * @param id
+     * @param model
+     * @return
+     */
+    @GetMapping("/manager/addRead")
+    public String addRead(String type, Integer id, Model model){
+        if(type != null && type.equals("edit")){
+            Read read = readService.selectById(id);
+            model.addAttribute(Const.READ,read);
+        }
+        return "manager/read/addRead";
+    }
 }
