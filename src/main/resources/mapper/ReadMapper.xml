@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learn.web.mapper.ReadMapper">
+    <resultMap id="BaseResultMap" type="com.learn.web.pojo.Read">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="english" jdbcType="VARCHAR" property="english" />
+        <result column="chinese"  jdbcType="VARCHAR" property="chinese" />
+        <result column="read_time"  jdbcType="VARCHAR" property="readTime" />
+    </resultMap>
+
+    <select id="queryList" resultMap="BaseResultMap" >
+        <!-- 根据条件查询 所有信息 -->
+        select
+        *
+        from `read`
+        <where>
+            <if test="stime!=null and ftime!=null"> and read_time &gt;= #{stime} and read_time &lt;= #{ftime} </if>
+        </where>
+        limit #{startIndex},#{pagesize}
+    </select>
+
+    <select id="queryCount" resultType="int" >
+        select count(*) from `read`
+        <where>
+            <if test="stime!=null and ftime!=null"> and read_time &gt;= #{stime} and read_time &lt;= #{ftime} </if>
+        </where>
+    </select>
+
+</mapper>

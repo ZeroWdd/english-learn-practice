@@ -22,6 +22,7 @@ public class Read {
     private String chinese;
     private String title;
     private String titleChinese;
+    private String readTime;
 
 
 }

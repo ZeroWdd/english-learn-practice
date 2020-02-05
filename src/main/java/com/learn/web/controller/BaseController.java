@@ -247,4 +247,8 @@ public class BaseController {
         return "learn/read";
     }
 
+    @GetMapping("/manager/read")
+    public String read(){
+        return "manager/read/readList";
+    }
 }

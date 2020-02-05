@@ -1,11 +1,14 @@
 package com.learn.web.service;
 
 import com.learn.web.mapper.ReadMapper;
+import com.learn.web.pojo.Log;
 import com.learn.web.pojo.Read;
+import com.learn.web.util.PageBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -26,5 +29,18 @@ public class ReadService {
 
     public Read selectOne(String id) {
         return readMapper.selectByPrimaryKey(id);
+    }
+
+    public PageBean<Read> queryPage(Map<String, Object> paramMap) {
+        PageBean<Read> pageBean = new PageBean<>((Integer) paramMap.get("pageno"),(Integer) paramMap.get("pagesize"));
+
+        Integer startIndex = pageBean.getStartIndex();
+        paramMap.put("startIndex",startIndex);
+        List<Read> datas = readMapper.queryList(paramMap);
+        pageBean.setDatas(datas);
+
+        Integer totalsize = readMapper.queryCount(paramMap);
+        pageBean.setTotalsize(totalsize);
+        return pageBean;
     }
 }
