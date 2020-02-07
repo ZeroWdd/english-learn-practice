@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -66,5 +67,13 @@ public class ReadService {
     public int delByReadIds(List<Integer> idList) {
         String ids = StringUtils.join(idList, ",");
         return readMapper.deleteByIds(ids);
+    }
+
+    public String nextRead(String readId) {
+        Read read = readMapper.selectByPrimaryKey(readId);
+        List<Read> reads = readMapper.selectAll();
+        Optional<Read> any = reads.stream().filter(read1 -> read1.getId() > read.getId()).findAny();
+        if (!any.isPresent()) return reads.get(0).getId().toString();
+        return any.get().getId().toString();
     }
 }

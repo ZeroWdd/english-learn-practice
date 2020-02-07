@@ -14,6 +14,7 @@
 <div th:replace="/common/header::header-div"></div>
 
 <div class="layui-container">
+  <div id="readId" style="display: none" th:text="${read.id}"></div>
   <div class="layui-row layui-col-space15">
     <div class="layui-col-md6 content detail">
       <div class="fly-panel detail-box">
@@ -27,15 +28,37 @@
         <h1 th:text="${read.titleChinese}"></h1>
         <div class="detail-body photos" th:utext="${read.chinese}">
         </div>
+        <button type="button" onclick="nextRead()" class="layui-btn">下一篇</button>
       </div>
     </div>
+
   </div>
 </div>
 
-
 <script th:src="@{/res/layui/layui.js}"></script>
 <script>
+  layui.use(['jquery', 'layer'], function () {
+    const $ = layui.jquery;
+    const layer = layui.layer;
 
+    window.nextRead = function () {
+      let readId = $("#readId").html();
+      $.ajax({
+        url:'/learn/read/next/',
+        data: {"readId" : readId},
+        dataType:"json",
+        type:'post',
+        success:function(data){
+          if(data.success){
+            window.location.href = "/learn/read/one/" + data.data;
+          }else{
+            layer.msg("短文不存在");
+            return;
+          }
+        }
+      });
+    }
+  })
 </script>
 
 </body>

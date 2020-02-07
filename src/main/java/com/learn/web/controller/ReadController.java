@@ -96,4 +96,16 @@ public class ReadController {
         }
         return ajaxResult;
     }
+
+    @PostMapping("/learn/read/next")
+    public AjaxResult next(@RequestParam String readId){
+        readId = readService.nextRead(readId);
+        if(readId != null){
+            ajaxResult.setData(readId);
+            ajaxResult.ajaxSuccess("删除成功");
+        }else{
+            ajaxResult.ajaxFalse("删除失败");
+        }
+        return ajaxResult;
+    }
 }
