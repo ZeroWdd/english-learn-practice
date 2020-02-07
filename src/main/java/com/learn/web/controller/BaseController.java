@@ -241,7 +241,11 @@ public class BaseController {
     }
 
     @GetMapping("/learn/read/one/{id}")
-    public String read(@PathVariable String id,Model model){
+    public String read(@PathVariable String id,Model model,HttpSession session){
+        User user = (User) session.getAttribute(Const.USER);
+        if(user == null){
+            return "/user/login";
+        }
         Read read = readService.selectOne(id);
         model.addAttribute(Const.READ,read);
         return "learn/read";
