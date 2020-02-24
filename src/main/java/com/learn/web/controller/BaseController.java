@@ -61,6 +61,12 @@ public class BaseController {
         return "learn/index";
     }
 
+    @RequestMapping("/exam")
+    public String exam(Model model){
+
+        return "exam/index";
+    }
+
     /**
      * 跳转管理员登录界面
      * @return
