@@ -269,6 +269,11 @@ public class BaseController {
         return "manager/subject/subjectList";
     }
 
+    @GetMapping("/manager/paper")
+    public String paper(){
+        return "manager/paper/paperList";
+    }
+
     /**
      * 跳转添加短文页面
      * @param type
@@ -285,6 +290,13 @@ public class BaseController {
         return "manager/read/addRead";
     }
 
+    /**
+     * 跳转添加题目页面
+     * @param type
+     * @param id
+     * @param model
+     * @return
+     */
     @GetMapping("/manager/addSubject")
     public String addSubject(String type, Integer id, Model model){
         if(type != null && type.equals("edit")){
