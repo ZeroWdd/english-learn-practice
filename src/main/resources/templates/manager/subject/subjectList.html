@@ -12,23 +12,10 @@
     <div class="layui-card">
         <div class="layui-form layui-card-header layuiadmin-card-header-auto">
             <div class="layui-form-item">
-                <div class="layui-inline" style="width: 250px">
-                    <label class="layui-form-label">英译</label>
-                    <div class="layui-input-block">
-                        <input type="text" id="english" name="english" placeholder="请输入" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline" style="width: 250px">
-                    <label class="layui-form-label">汉译</label>
-                    <div class="layui-input-block">
-                        <input type="text" id="chinese" name="chinese" placeholder="请输入" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
 
                 <div class="layui-inline">
-                    <button class="layui-btn layuiadmin-btn-admin" data-type="search_table">
-                        <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
-                    </button>
+                    <button  type="button" class="layui-btn layui-btn-normal" onclick="singleCheck()">单选</button>
+                    <button  type="button" class="layui-btn layui-btn-normal" onclick="moreCheck()">多选</button>
                 </div>
             </div>
         </div>
@@ -74,21 +61,25 @@
             cols: [
                 [ //表头
                     {type: 'checkbox', fixed: 'left'},
-                    {field: 'id', title: '编号', width:70},
-                    {field: 'type', title: '类型', width:200,
+                    {field: 'id', title: '编号', width:60},
+                    {field: 'title', title: '题目', width:200},
+                    {field: 'type', title: '类型', width:80,
                         templet:function (row) {
-                            if (row.type == 0){
+                            if (row.type == 1){
                                 return '<a class="layui-btn layui-btn-success layui-btn-xs">单选</a>';
                             }else{
                                 return '<a class="layui-btn layui-btn-danger layui-btn-xs">多选</a>';
                             }
                         }},
-                    {field: 'a', title: '选项A', width:120},
-                    {field: 'b', title: '选项B', width:120},
-                    {field: 'c', title: '选项C', width:120},
-                    {field: 'd', title: '选项D', width:120},
-                    {field: 'answer', title: '答案', width: 150},
-                    {field: 'score', title: '分数', width: 150},
+                    {field: 'a', title: '选项A', width:100},
+                    {field: 'b', title: '选项B', width:100},
+                    {field: 'c', title: '选项C', width:100},
+                    {field: 'd', title: '选项D', width:100},
+                    {field: 'answer', title: '答案', width: 110,
+                        templet:function (row) {
+                            return '<a class="layui-btn layui-btn-normal layui-btn-xs">'+ row.answer +'</a>';
+                        }},
+                    {field: 'score', title: '分数', width: 90},
                     {fixed: 'right',title:'操作', width: 240, align:'center', toolbar: '#table_admin'}
                 ]
             ],
@@ -96,9 +87,38 @@
             id: 'sreload'
         });
 
+        window.singleCheck = function() {
+            //执行重载
+            table.reload('sreload', {
+                //一定要加不然乱码
+                method: 'post'
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                ,where: {
+                    //表示传到后台的参数
+                    type: 1,
+                }
+            });
+        };
+        window.moreCheck = function() {
+            //执行重载
+            table.reload('sreload', {
+                //一定要加不然乱码
+                method: 'post'
+                ,page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                ,where: {
+                    //表示传到后台的参数
+                    type: 2,
+                }
+            });
+        }
+
         let uploadInst = upload.render({
             elem: '#upload'
-            ,url: '/manager/upload' //改成您自己的上传接口
+            ,url: '/manager/subject/upload' //改成您自己的上传接口
             ,accept: 'file' //普通文件
             ,done: function(res){
                 if(res.success){
@@ -110,31 +130,14 @@
         });
 
         let active = {
-            search_table: function(){
-                let english = $('#english');
-                let chinese = $('#chinese');
 
-                //执行重载
-                table.reload('sreload', {
-                    //一定要加不然乱码
-                    method: 'post'
-                    ,page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                    ,where: {
-                        //表示传到后台的参数
-                        english: english.val(),
-                        chinese: chinese.val(),
-                    }
-                });
-            },
             add: function() {
                 layer.open({
                     type: 2,
-                    title: '添加单词',
+                    title: '添加题目',
                     skin: 'layui-layer-demo', //加上边框
                     area: ['500px', '450px'], //宽高
-                    content: '/manager/addWord'
+                    content: '/manager/addSubject'
                 });
             },
             batchdel:function () {
@@ -148,7 +151,7 @@
                             jsonObj["ids["+i+"]"] = checkAll.data[i].id;
                         }
                         $.ajax({
-                            url:'/manager/delWord',
+                            url:'/manager/delSubject',
                             data:jsonObj,
                             dataType:'json',
                             type:'post',
@@ -185,11 +188,11 @@
         function edit(data) {
             layer.open({
                 type: 2,
-                title: '修改单词',
+                title: '修改题目',
                 skin: 'layui-layer-demo', //加上边框
                 area: ['500px', '450px'], //宽高
                 method: 'post',
-                content: '/manager/addWord?type=edit&id='+data.id
+                content: '/manager/addSubject?type=edit&id='+data.id
             });
         }
         //后边两个参数仅仅是因为要执行动态删除dom
@@ -197,7 +200,7 @@
             var jsonObj = {};
             jsonObj["ids[0]"] = data.id;
             $.ajax({
-                url:'/manager/delWord',
+                url:'/manager/delSubject',
                 data:jsonObj,
                 dataType:'json',
                 type:'post',

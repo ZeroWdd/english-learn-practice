@@ -34,6 +34,8 @@ public class BaseController {
     private WordService wordService;
     @Autowired
     private ReadService readService;
+    @Autowired
+    private SubjcetService subjcetService;
 
     @RequestMapping("/index")
     public String index(){
@@ -262,6 +264,11 @@ public class BaseController {
         return "manager/read/readList";
     }
 
+    @GetMapping("/manager/subject")
+    public String subject(){
+        return "manager/subject/subjectList";
+    }
+
     /**
      * 跳转添加短文页面
      * @param type
@@ -276,5 +283,14 @@ public class BaseController {
             model.addAttribute(Const.READ,read);
         }
         return "manager/read/addRead";
+    }
+
+    @GetMapping("/manager/addSubject")
+    public String addSubject(String type, Integer id, Model model){
+        if(type != null && type.equals("edit")){
+            Subject subject = subjcetService.selectById(id);
+            model.addAttribute(Const.SUBJECT,subject);
+        }
+        return "manager/subject/addSubject";
     }
 }

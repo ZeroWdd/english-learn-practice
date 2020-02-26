@@ -18,11 +18,12 @@ public class Subject {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer type;
+    private String title; // 题目
+    private Integer type; // 单选1 多选 2
     private String a;
     private String b;
     private String c;
     private String d;
     private String answer;
-    private Integer score;
+    private String score;
 }

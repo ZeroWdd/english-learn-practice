@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>添加题目</title>
+    <link rel="stylesheet" th:href="@{/layuiadmin/layui/css/layui.css}" media="all">
+</head>
+<body>
+    <div class="layui-form" lay-filter="layuiadmin-form-admin" id="layuiadmin-form-admin" style="padding: 20px 30px 0 0;">
+        <input type="hidden" name="id" th:if="${subject}" th:value="${subject.id}">
+        <div class="layui-form-item">
+            <label class="layui-form-label">题目</label>
+            <div class="layui-input-inline">
+                <input th:value="${subject != null}?${subject.title}:''" type="text" name="title" lay-verify="required" placeholder="请输入题目" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">选项A</label>
+            <div class="layui-input-inline">
+                <input th:value="${subject != null}?${subject.a}:''" type="text" name="a" lay-verify="required" placeholder="请输入选项A" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">选项B</label>
+            <div class="layui-input-inline">
+                <input th:value="${subject != null}?${subject.b}:''" type="text" name="b" lay-verify="required" placeholder="请输入选项B" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">选项C</label>
+            <div class="layui-input-inline">
+                <input th:value="${subject != null}?${subject.c}:''" type="text" name="c" lay-verify="required" placeholder="请输入选项C" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">选项D</label>
+            <div class="layui-input-inline">
+                <input th:value="${subject != null}?${subject.d}:''" type="text" name="d" lay-verify="required" placeholder="请输入选项D" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">答案(填ABCD)</label>
+            <div class="layui-input-inline">
+                <input th:value="${subject != null}?${subject.answer}:''" type="text" name="answer" lay-verify="required" placeholder="请输入答案" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分数</label>
+            <div class="layui-input-inline">
+                <input th:value="${subject != null}?${subject.score}:''" type="text" name="score" lay-verify="required" placeholder="请输入答案" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button th:text="${subject != null}?'立即修改':'立即添加'" class="layui-btn" lay-submit="" lay-filter="addSubject">立即添加</button>
+                <button th:if="${subject == null}" type="reset" id="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/layuiadmin/layui/layui.js}"></script>
+    <script>
+
+        layui.use(['form','jquery'], function () {
+            const form = layui.form;
+            const $ = layui.jquery;
+            form.on('submit(addSubject)',function (data) {
+                $.ajax({
+                    url:'/manager/addSubject',
+                    data:data.field,
+                    dataType:'json',
+                    type:'post',
+                    success:function (data) {
+                        if (data.success){
+                            layer.msg(data.message);
+                            layer.alert(data.message,function(){
+                                window.parent.location.reload();//刷新父页面
+                                parent.layer.close(index);//关闭弹出层
+                            });
+                        }else{
+                            layer.msg(data.message);
+                        }
+                    }
+                });
+                return false;
+            })
+
+            //重置
+            $("#reset").click(function () {
+                $("input").val("");
+            })
+
+        });
+
+
+    </script>
+</body>
+</html>
