@@ -4,6 +4,7 @@ import com.learn.web.pojo.*;
 import com.learn.web.service.*;
 import com.learn.web.util.AjaxResult;
 import com.learn.web.util.Const;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Auther: wdd
@@ -36,6 +38,8 @@ public class BaseController {
     private ReadService readService;
     @Autowired
     private SubjcetService subjcetService;
+    @Autowired
+    private PaperService paperService;
 
     @RequestMapping("/index")
     public String index(){
@@ -257,6 +261,26 @@ public class BaseController {
         Read read = readService.selectOne(id);
         model.addAttribute(Const.READ,read);
         return "learn/read";
+    }
+
+    @GetMapping("/exam/paper/one/{id}")
+    public String paper(@PathVariable String id,Model model,HttpSession session){
+//        User user = (User) session.getAttribute(Const.USER);
+//        if(user == null){
+//            return "/user/login";
+//        }
+        List<Subject> subjects = paperService.selectPaperSubject(id);
+        // 分出单选和多选
+        List<Subject> danxuan = subjects.stream().filter(subject -> subject.getAnswer().length() == 1).collect(Collectors.toList());
+        List<Subject> duoxuan = subjects.stream().filter(subject -> subject.getAnswer().length() != 1).collect(Collectors.toList());
+//        if(ArrayUtils.isNotEmpty(danxuan.toArray())){
+//            model.addAttribute("danxuan",danxuan);
+//        }
+//        if(ArrayUtils.isNotEmpty(duoxuan.toArray())){
+//            model.addAttribute("duoxuan",duoxuan);
+//        }
+        model.addAttribute("danxuan",danxuan);
+        return "exam/paper";
     }
 
     @GetMapping("/manager/read")

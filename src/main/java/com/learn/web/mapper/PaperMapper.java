@@ -1,7 +1,10 @@
 package com.learn.web.mapper;
 
 import com.learn.web.pojo.Paper;
+import com.learn.web.pojo.Subject;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.common.IdsMapper;
 import tk.mybatis.mapper.common.Mapper;
 import tk.mybatis.mapper.common.MySqlMapper;
@@ -21,4 +24,7 @@ public interface PaperMapper extends Mapper<Paper>, IdsMapper<Paper>, MySqlMappe
 
     @Insert("insert into paper_subject(paper_id,subject_id) values(#{paperId},#{subjectId}) ")
     void insertPaperSubject(Integer paperId, Integer subjectId);
+
+    @Select("select subject.* from paper_subject,subject where paper_subject.paper_id = #{id} and paper_subject.subject_id = subject.id")
+    List<Subject> selectPaperSubject(String id);
 }

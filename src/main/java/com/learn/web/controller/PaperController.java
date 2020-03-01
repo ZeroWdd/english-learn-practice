@@ -1,19 +1,16 @@
 package com.learn.web.controller;
 
 import com.learn.web.pojo.Paper;
-import com.learn.web.pojo.Subject;
 import com.learn.web.service.PaperService;
 import com.learn.web.util.AjaxResult;
 import com.learn.web.util.Data;
 import com.learn.web.util.PageBean;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,5 +63,15 @@ public class PaperController {
             ajaxResult.ajaxSuccess("试卷生成成功");
         }
         return ajaxResult;
+    }
+
+    @GetMapping("exam/paper/{num}")
+    public AjaxResult paper(@PathVariable Integer num){
+        List<Paper> papers = paperService.selectListByNum(num);
+        if(ArrayUtils.isNotEmpty(papers.toArray())){
+            ajaxResult.setData(papers);
+            return ajaxResult.ajaxSuccess();
+        }
+        return ajaxResult.ajaxFalse();
     }
 }

@@ -3,6 +3,7 @@ package com.learn.web.service;
 import com.learn.web.mapper.PaperMapper;
 import com.learn.web.mapper.SubjectMapper;
 import com.learn.web.pojo.Paper;
+import com.learn.web.pojo.Read;
 import com.learn.web.pojo.Subject;
 import com.learn.web.util.PageBean;
 import org.apache.commons.lang3.StringUtils;
@@ -66,5 +67,16 @@ public class PaperService {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public List<Paper> selectListByNum(Integer num) {
+        List<Paper> papers = paperMapper.selectAll();
+        List<Paper> list = papers.stream().limit(num).collect(Collectors.toList());
+        return list;
+    }
+
+    public List<Subject> selectPaperSubject(String id) {
+        List<Subject> subjects = paperMapper.selectPaperSubject(id);
+        return subjects;
     }
 }
